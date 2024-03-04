@@ -3,3 +3,6 @@ ServerPort = 8080
 
 [news]
 BBCNewsRSSURL = "https://feeds.bbci.co.uk/news/world/rss.xml"
+
+[workers]
+NumWorkers = 10

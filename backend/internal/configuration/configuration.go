@@ -13,6 +13,9 @@ type Configuration struct {
 	News struct {
 		BBCNewsRSSURL string `toml:"BBCNewsRSSURL"`
 	} `toml:"news"`
+	Workers struct {
+		NumWorkers int `toml:"NumWorkers"`
+	} `toml:"workers"`
 }
 
 var conf *Configuration

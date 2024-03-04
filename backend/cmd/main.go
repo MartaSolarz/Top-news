@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
@@ -17,24 +18,37 @@ func main() {
 
 	serverAddress := fmt.Sprintf(":%d", configs.Server.Port)
 
-	h := handler.NewHandler(configs.News.BBCNewsRSSURL)
+	h := handler.NewHandler(configs.News.BBCNewsRSSURL, configs.Workers.NumWorkers)
 
 	r := router.New()
-	r.GET("/", indexPageHandler)
 	r.GET("/home", h.HomeHandler)
-	r.GET("/fetchrss", h.FetchRSSHandler)
+	r.GET("/news", h.NewsHandler)
+	r.GET("/favorites", h.FavoritesHandler)
+
+	fs := &fasthttp.FS{
+		Root:               "frontend",             // Katalog z plikami frontendowymi
+		IndexNames:         []string{"index.html"}, // Nazwy plików indeksowych
+		GenerateIndexPages: false,                  // Nie generuj stron indeksowych
+		AcceptByteRange:    false,                  // Obsługa zakresów bajtów
+	}
+	fsHandler := fs.NewRequestHandler()
+
+	requestHandler := func(ctx *fasthttp.RequestCtx) {
+		path := string(ctx.Path())
+		switch {
+		case path == "/", path == "/home", path == "/news", path == "/favorites":
+			r.Handler(ctx)
+		default:
+			fsHandler(ctx)
+		}
+	}
 
 	server := &fasthttp.Server{
-		Handler: r.Handler,
+		Handler: requestHandler,
 	}
 
-	fmt.Println("Server is starting on port 8080...")
+	log.Printf("Server is starting on %s...", serverAddress)
 	if err := server.ListenAndServe(serverAddress); err != nil {
-		fmt.Printf("Error in starting server: %v\n", err)
-		return
+		log.Fatalf("Error in starting server: %v", err)
 	}
-}
-
-func indexPageHandler(ctx *fasthttp.RequestCtx) {
-	fasthttp.ServeFile(ctx, "frontend/index.html")
 }
