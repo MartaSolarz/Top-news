@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
+
 	"top-news/backend/internal/configuration"
 	"top-news/backend/internal/handler"
 )

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Articles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #333;
+            color: #fff;
+        }
+        .article {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            background-color: #444;
+        }
+        .title {
+            color: #ffdbb6;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .description, .summary, .authors {
+            margin-top: 10px;
+        }
+        .summary-content {
+            display: none;
+            margin-top: 10px;
+        }
+        .show-more {
+            color: #f85876;
+            cursor: pointer;
+        }
+        #searchInput {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: calc(100% - 22px); /* Aby uwzględnić padding */
+            font-size: 16px;
+        }
+        h1 {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<h1>Recent Articles</h1>
+<input type="text" id="searchInput" onkeyup="searchArticles()" placeholder="Search for articles...">
+{{range .}}
+<div class="article">
+    <div class="title">{{.Title}}</div>
+    <div class="description">{{.Description}}</div>
+    <div class="summary">Summary: <span class="show-more">Show More</span>
+        <div class="summary-content">{{.Summary}}</div>
+    </div>
+</div>
+{{end}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.show-more').forEach(item => {
+            item.addEventListener('click', event => {
+                let content = item.nextElementSibling;
+                if (content.style.display === "none") {
+                    content.style.display = "block";
+                    item.textContent = "Show Less";
+                } else {
+                    content.style.display = "none";
+                    item.textContent = "Show More";
+                }
+            });
+        });
+    });
+
+    function searchArticles() {
+        let input = document.getElementById('searchInput');
+        let filter = input.value.toUpperCase();
+        let articles = document.getElementsByClassName('article');
+        for (let i = 0; i < articles.length; i++) {
+            let title = articles[i].getElementsByClassName('title')[0];
+            if (title.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                articles[i].style.display = "";
+            } else {
+                articles[i].style.display = "none";
+            }
+        }
+    }
+</script>
+</body>
+</html>
