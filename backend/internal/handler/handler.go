@@ -2,26 +2,13 @@ package handler
 
 import (
 	"fmt"
-	"log"
-
 	"github.com/valyala/fasthttp"
+	"log"
 
 	"top-news/backend/internal/parser"
 )
 
-type Handler struct {
-	NewsURL    string
-	NumWorkers int
-}
-
-func NewHandler(newsURL string, numWorkers int) *Handler {
-	return &Handler{
-		NewsURL:    newsURL,
-		NumWorkers: numWorkers,
-	}
-}
-
-func (h *Handler) HomeHandler(ctx *fasthttp.RequestCtx) {
+func (h *DisplayNewsHandler) HomeHandler(ctx *fasthttp.RequestCtx) {
 	log.Printf("[GET] /home")
 	feed, err := parser.FetchRSS(h.NewsURL)
 	if err != nil {

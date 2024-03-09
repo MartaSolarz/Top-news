@@ -30,6 +30,36 @@ func NewArticle(item *gofeed.Item, date, content string, thumbnail Thumbnail) *A
 	}
 }
 
+func NewArticleFromDB(
+	id int,
+	website,
+	copyRight,
+	title,
+	description,
+	summary,
+	publishDate,
+	sourceUrl,
+	thbUrl,
+	thbWidth,
+	thbHeight string,
+) *Article {
+	return &Article{
+		ID:          id,
+		Website:     website,
+		CopyRight:   copyRight,
+		Title:       title,
+		Description: description,
+		Summary:     summary,
+		PublishDate: publishDate,
+		SourceURL:   sourceUrl,
+		Thumbnail: Thumbnail{
+			URL:    thbUrl,
+			Width:  thbWidth,
+			Height: thbHeight,
+		},
+	}
+}
+
 type Thumbnail struct {
 	URL    string
 	Width  string

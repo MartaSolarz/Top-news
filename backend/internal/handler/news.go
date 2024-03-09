@@ -9,15 +9,30 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"top-news/backend/internal/service"
 
 	"top-news/backend/internal/models"
 	"top-news/backend/internal/parser"
 )
 
-func (h *Handler) NewsHandler(ctx *fasthttp.RequestCtx) {
+type DisplayNewsHandler struct {
+	NewsService *service.DisplayNewsService
+	NewsURL     string
+	NumWorkers  int
+}
+
+func NewDisplayNewsHandler(newsService *service.DisplayNewsService, numWorkers int) *DisplayNewsHandler {
+	return &DisplayNewsHandler{
+		NewsService: newsService,
+		NumWorkers:  numWorkers,
+	}
+}
+
+func (h *DisplayNewsHandler) DisplayNewsHandler(ctx *fasthttp.RequestCtx) {
 	log.Printf("[GET] /news")
 	feed, err := parser.FetchRSS(h.NewsURL)
 	if err != nil {
+		log.Printf("Error fetching RSS feed: %v", err)
 		ctx.SetBodyString(err.Error())
 		return
 	}
@@ -59,7 +74,7 @@ func (h *Handler) NewsHandler(ctx *fasthttp.RequestCtx) {
 	}
 }
 
-func (h *Handler) sendArticlesToChan(articlesChan chan<- *models.Article, items []*gofeed.Item) {
+func (h *DisplayNewsHandler) sendArticlesToChan(articlesChan chan<- *models.Article, items []*gofeed.Item) {
 	var wg sync.WaitGroup
 	itemChan := make(chan *gofeed.Item, len(items))
 
