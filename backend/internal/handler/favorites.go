@@ -6,7 +6,7 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-func (h *Handler) FavoritesHandler(ctx *fasthttp.RequestCtx) {
+func (h *DisplayNewsHandler) FavoritesHandler(ctx *fasthttp.RequestCtx) {
 	log.Printf("[GET] /favorites")
 	ctx.SetBodyString("Welcome to the favorites page!")
 }

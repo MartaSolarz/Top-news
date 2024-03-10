@@ -1,8 +1,20 @@
 [server]
+ServerHost = "localhost"
 ServerPort = 8080
+
+[database]
+DBHost = "0.0.0.0"
+DBPort = 3306
+DBUser = "root"
+DBName = "news"
+NewsTableName = "articles"
+TTL = 3 # in months
 
 [news]
 BBCNewsRSSURL = "https://feeds.bbci.co.uk/news/world/rss.xml"
+FetchInterval = 5 # in minutes
+MaxRetries = 3
 
 [workers]
 NumWorkers = 10
+ChanSize = 100
