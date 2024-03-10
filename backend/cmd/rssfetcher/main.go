@@ -3,27 +3,28 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mmcdole/gofeed"
-	"github.com/valyala/fasthttp"
 	"log"
 	"time"
+
+	"github.com/mmcdole/gofeed"
+	"github.com/valyala/fasthttp"
+
 	"top-news/backend/internal/configuration"
 	"top-news/backend/pkg/rss"
 )
 
 var configPath = "backend/internal/configuration/configuration.toml"
 
-func sendPostRequest(url string, jsonData string) {
+func sendPostRequest(url string, jsonData []byte) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 	req.Header.SetMethod("POST")
 	req.SetRequestURI(url)
 	req.Header.SetContentType("application/json")
-	req.SetBodyString(jsonData)
+	req.SetBody(jsonData)
 
 	resp := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseResponse(resp)
-	log.Printf("sending", jsonData)
 
 	if err := fasthttp.Do(req, resp); err != nil {
 		log.Printf("Error sending request: %v\n", err)
@@ -34,6 +35,8 @@ func sendPostRequest(url string, jsonData string) {
 		log.Printf("Error response from server, status code: %d\n", resp.StatusCode())
 		return
 	}
+
+	log.Println("Response from server received successfully.")
 }
 
 func main() {
@@ -41,10 +44,10 @@ func main() {
 	rssURL := configs.News.BBCNewsRSSURL
 	duration := configs.News.FetchInterval
 	maxRetries := configs.News.MaxRetries
-	apiURL := fmt.Sprintf("https://%s:%d/api/process", configs.Server.Host, configs.Server.Port)
+	apiURL := fmt.Sprintf("http://%s:%d/api/process", configs.Server.Host, configs.Server.Port)
 
 	for {
-		fmt.Println("Fetching RSS feed...")
+		log.Println("Fetching RSS feed...")
 		var feeds *gofeed.Feed
 		retries := 0
 		for retries < maxRetries {
@@ -63,15 +66,17 @@ func main() {
 			continue
 		}
 
-		data, err := json.Marshal(feeds)
+		rssResponses := rss.ConvertRssResponseToFeedItems(feeds)
+
+		jsonData, err := json.Marshal(rssResponses)
 		if err != nil {
 			log.Printf("Error in marshaling articles: %v\n", err)
 			time.Sleep(duration)
 			continue
 		}
 
-		sendPostRequest(apiURL, string(data))
-		fmt.Println("Articles sent to server, waiting for the next fetch...")
+		sendPostRequest(apiURL, jsonData)
+		log.Println("Articles sent to server, waiting for the next fetch...")
 
 		time.Sleep(duration)
 	}

@@ -7,7 +7,8 @@ DBHost = "0.0.0.0"
 DBPort = 3306
 DBUser = "root"
 DBName = "news"
-NewsTableName = "news"
+NewsTableName = "articles"
+TTL = 3 # in months
 
 [news]
 BBCNewsRSSURL = "https://feeds.bbci.co.uk/news/world/rss.xml"

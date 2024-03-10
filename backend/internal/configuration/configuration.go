@@ -20,7 +20,8 @@ type Configuration struct {
 		Password string
 		DBName   string `toml:"DBName"`
 		DBTable  string `toml:"NewsTableName"`
-	}
+		TTL      int    `toml:"TTL"`
+	} `toml:"database"`
 	News struct {
 		BBCNewsRSSURL string        `toml:"BBCNewsRSSURL"`
 		FetchInterval time.Duration `toml:"FetchInterval"`

@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
-	"top-news/backend/internal/adapter"
-	"top-news/backend/internal/repository/newsDB"
-	"top-news/backend/internal/service"
 
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
 
+	"top-news/backend/internal/adapter"
 	"top-news/backend/internal/configuration"
 	"top-news/backend/internal/handler"
+	"top-news/backend/internal/repository/newsDB"
+	"top-news/backend/internal/service"
 )
 
 var configPath = "backend/internal/configuration/configuration.toml"
@@ -33,13 +33,13 @@ func main() {
 
 	serverAddress := fmt.Sprintf(":%d", configs.Server.Port)
 
-	displayNewsHandler := createDisplayHandler(dbConn, configs.Database.DBTable, configs.Workers.NumWorkers)
-	processNewsHandler := createProcessHandler(dbConn, configs.Database.DBTable, configs.Workers.NumWorkers)
+	displayNewsHandler := createDisplayHandler(dbConn, configs)
+	processNewsHandler := createProcessHandler(dbConn, configs)
 
 	r := router.New()
 	r.GET("/news", displayNewsHandler.DisplayNewsHandler)
-	r.GET("/favorites", displayNewsHandler.FavoritesHandler)
 	r.POST("/api/process", processNewsHandler.ProcessNewsHandler)
+	r.GET("/favorites", displayNewsHandler.FavoritesHandler)
 
 	fs := &fasthttp.FS{
 		Root:               "frontend",
@@ -52,7 +52,7 @@ func main() {
 	requestHandler := func(ctx *fasthttp.RequestCtx) {
 		path := string(ctx.Path())
 		switch {
-		case path == "/", path == "/home", path == "/news", path == "/favorites", path == "/api/process":
+		case path == "/news", path == "/favorites", path == "/api/process":
 			r.Handler(ctx)
 		default:
 			fsHandler(ctx)
@@ -69,16 +69,16 @@ func main() {
 	}
 }
 
-func createDisplayHandler(dbConn *adapter.DBConnection, tableName string, numOfWorkers int) *handler.DisplayNewsHandler {
-	dbRepo := newsDB.NewDBOperations(dbConn, tableName)
+func createDisplayHandler(dbConn *adapter.DBConnection, configs *configuration.Configuration) *handler.DisplayNewsHandler {
+	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.DBTable, configs.Database.TTL)
 	newsService := service.NewDisplayNewsService(dbRepo)
 
-	return handler.NewDisplayNewsHandler(newsService, numOfWorkers)
+	return handler.NewDisplayNewsHandler(newsService)
 }
 
-func createProcessHandler(dbConn *adapter.DBConnection, tableName string, numOfWorkers int) *handler.ProcessNewsHandler {
-	dbRepo := newsDB.NewDBOperations(dbConn, tableName)
-	newsService := service.NewProcessNewsService(dbRepo)
+func createProcessHandler(dbConn *adapter.DBConnection, configs *configuration.Configuration) *handler.ProcessNewsHandler {
+	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.DBTable, configs.Database.TTL)
+	newsService := service.NewProcessNewsService(dbRepo, configs.Workers.NumWorkers)
 
-	return handler.NewProcessNewsHandler(newsService, numOfWorkers)
+	return handler.NewProcessNewsHandler(newsService, configs.Workers.NumWorkers)
 }

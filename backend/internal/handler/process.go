@@ -2,9 +2,11 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
-	"github.com/valyala/fasthttp"
 	"log"
+
+	"github.com/valyala/fasthttp"
+
+	"top-news/backend/internal/models"
 	"top-news/backend/internal/service"
 )
 
@@ -24,13 +26,26 @@ func (h *ProcessNewsHandler) ProcessNewsHandler(ctx *fasthttp.RequestCtx) {
 	log.Printf("[POST] /api/process")
 	ctx.SetBodyString("Processing news...")
 
-	var body interface{}
-	err := json.Unmarshal(ctx.PostBody(), &body)
+	var data []*models.FeedItem
+	err := json.Unmarshal(ctx.PostBody(), &data)
 	if err != nil {
+		log.Printf("Error unmarshalling data: %v", err)
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBodyString(fmt.Sprintf("Error processing request: %v", err))
+		ctx.SetBodyString("Bad Request")
 		return
 	}
 
-	h.NewsService.ProcessNews(body)
+	log.Printf("Processing %d news items", len(data))
+
+	err = h.NewsService.ProcessNews(data)
+	if err != nil {
+		log.Printf("Error processing news: %v", err)
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBodyString("Internal Server Error")
+		return
+	}
+
+	log.Printf("Processed news successfully!")
+
+	ctx.SetStatusCode(fasthttp.StatusOK)
 }
