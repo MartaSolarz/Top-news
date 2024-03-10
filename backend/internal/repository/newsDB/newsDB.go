@@ -41,12 +41,23 @@ func (dbOps *DBOperations) GetNews() ([]*models.Article, error) {
 	for rows.Next() {
 		var id, thbWidth, thbHeight int
 		var website, copyRight, title, description, summary, authors, sourceUrl, thbUrl string
-		var publishDate, expireAt time.Time
+		var publishDateStr, expireAtStr []byte
 		if err = rows.Scan(
 			&id, &website, &copyRight, &title, &description, &summary,
-			&publishDate, &sourceUrl, &authors, &thbUrl, &thbWidth, &thbHeight, &expireAt,
+			&publishDateStr, &sourceUrl, &authors, &thbUrl, &thbWidth, &thbHeight, &expireAtStr,
 		); err != nil {
 			log.Printf("could not scan row: %s", err.Error())
+			continue
+		}
+
+		publishDate, err := time.Parse("2006-01-02 15:04:05", string(publishDateStr))
+		if err != nil {
+			log.Printf("could not parse publish date: %s", err.Error())
+			continue
+		}
+		expireAt, err := time.Parse("2006-01-02 15:04:05", string(expireAtStr))
+		if err != nil {
+			log.Printf("could not parse expire date: %s", err.Error())
 			continue
 		}
 		record := models.NewArticleFromDB(
