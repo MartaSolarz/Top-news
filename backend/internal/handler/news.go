@@ -21,7 +21,6 @@ func NewDisplayNewsHandler(newsService *service.DisplayNewsService) *DisplayNews
 
 func (h *DisplayNewsHandler) DisplayNewsHandler(ctx *fasthttp.RequestCtx) {
 	log.Printf("[GET] /news")
-	ctx.SetBodyString("Display news...")
 
 	tmpl, err := template.ParseFiles("frontend/html/news.html")
 	if err != nil {

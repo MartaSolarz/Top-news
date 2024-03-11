@@ -131,3 +131,58 @@ func (dbOps *DBOperations) PutNews(articles []*models.Article) error {
 func (dbOps *DBOperations) GetTTL() int {
 	return dbOps.TTL
 }
+
+func (dbOps *DBOperations) GetFavorites(ids [][]byte) ([]*models.Article, error) {
+	// Przekształcanie identyfikatorów na stringi i tworzenie placeholderów
+	var placeholders []string
+	var args []interface{}
+	for _, id := range ids {
+		placeholders = append(placeholders, "?")
+		args = append(args, string(id))
+	}
+	placeholdersStr := strings.Join(placeholders, ", ")
+
+	query := fmt.Sprintf("SELECT * FROM %s WHERE id IN (%s)", dbOps.tableName, placeholdersStr)
+	rows, err := dbOps.mysqlConn.Client.Query(query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("could not execute query: %w", err)
+	}
+	defer func(rows *sql.Rows) {
+		err = rows.Close()
+		if err != nil {
+			log.Printf("could not close rows: %s", err.Error())
+		}
+	}(rows)
+
+	articles := make([]*models.Article, 0)
+	for rows.Next() {
+		var id, thbWidth, thbHeight int
+		var website, copyRight, title, description, summary, authors, sourceUrl, thbUrl string
+		var publishDateStr, expireAtStr []byte
+		if err = rows.Scan(
+			&id, &website, &copyRight, &title, &description, &summary,
+			&publishDateStr, &sourceUrl, &authors, &thbUrl, &thbWidth, &thbHeight, &expireAtStr,
+		); err != nil {
+			log.Printf("could not scan row: %s", err.Error())
+			continue
+		}
+
+		publishDate, err := time.Parse("2006-01-02 15:04:05", string(publishDateStr))
+		if err != nil {
+			log.Printf("could not parse publish date: %s", err.Error())
+			continue
+		}
+		expireAt, err := time.Parse("2006-01-02 15:04:05", string(expireAtStr))
+		if err != nil {
+			log.Printf("could not parse expire date: %s", err.Error())
+			continue
+		}
+		record := models.NewArticleFromDB(
+			id, thbWidth, thbHeight, website, copyRight, title, description, summary,
+			sourceUrl, authors, thbUrl, publishDate, expireAt,
+		)
+
+		articles = append(articles, record)
+	}
+	return articles, nil
+}

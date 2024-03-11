@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorites</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-
+<button class="menu-icon" onclick="openNav()">☰</button>
+<div id="menuToggle">
+    <div id="sideMenu" class="side-nav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="/news">Home</a>
+        <a href="/favorites">Favorites</a>
+        <a href="/contact">Contact</a>
+    </div>
+</div>
+<div id="main-content">
+<h1>Articles you liked</h1>
+<div id="theme-toggle">
+    <div id="sun" class="theme-icon selected" onclick="toggleTheme('light')">🌞</div>
+    <div id="moon" class="theme-icon" onclick="toggleTheme('dark')">🌜</div>
+</div>
+<div id="favorites-container">
+</div>
+</div>
+<script src="../js/favorites.js"></script>
+<footer>
+    Copyright: (C) British Broadcasting Corporation, see
+    <a href="https://www.bbc.co.uk/usingthebbc/terms-of-use/#15metadataandrssfeeds" target="_blank">
+        terms and conditions of reuse</a>.
+</footer>
 </body>
 </html>

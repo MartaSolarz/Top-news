@@ -72,3 +72,16 @@ function toggleLike(articleId, element) {
 
     localStorage.setItem('favorites', JSON.stringify(favorites));
 }
+
+function openNav() {
+    document.getElementById("sideMenu").style.width = "200px";
+    document.getElementById("main-content").style.marginLeft = "200px";
+}
+
+function closeNav() {
+    document.getElementById("sideMenu").style.width = "0";
+    document.getElementById("main-content").style.marginLeft = "0";
+}
+
+document.querySelector(".menu-icon").addEventListener("click", openNav);
+document.querySelector(".closebtn").addEventListener("click", closeNav);

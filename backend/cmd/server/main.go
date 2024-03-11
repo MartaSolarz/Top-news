@@ -35,11 +35,15 @@ func main() {
 
 	displayNewsHandler := createDisplayHandler(dbConn, configs)
 	processNewsHandler := createProcessHandler(dbConn, configs)
+	fetchFavoritesHandler := createFetchFavoritesHandler(dbConn, configs)
+	contactHandler := createContactHandler(configs)
 
 	r := router.New()
 	r.GET("/news", displayNewsHandler.DisplayNewsHandler)
 	r.POST("/api/process", processNewsHandler.ProcessNewsHandler)
 	r.GET("/favorites", displayNewsHandler.FavoritesHandler)
+	r.POST("/api/favorites", fetchFavoritesHandler.FetchFavoritesHandler)
+	r.GET("/contact", contactHandler.ContactHandler)
 
 	fs := &fasthttp.FS{
 		Root:               "frontend",
@@ -52,7 +56,7 @@ func main() {
 	requestHandler := func(ctx *fasthttp.RequestCtx) {
 		path := string(ctx.Path())
 		switch {
-		case path == "/news", path == "/favorites", path == "/api/process":
+		case path == "/news", path == "/favorites", path == "/api/process", path == "/contact", path == "/api/favorites":
 			r.Handler(ctx)
 		default:
 			fsHandler(ctx)
@@ -81,4 +85,15 @@ func createProcessHandler(dbConn *adapter.DBConnection, configs *configuration.C
 	newsService := service.NewProcessNewsService(dbRepo, configs.Workers.NumWorkers)
 
 	return handler.NewProcessNewsHandler(newsService, configs.Workers.NumWorkers)
+}
+
+func createContactHandler(configs *configuration.Configuration) *handler.ContactHandler {
+	return handler.NewContactHandler()
+}
+
+func createFetchFavoritesHandler(dbConn *adapter.DBConnection, configs *configuration.Configuration) *handler.FetchFavoritesHandler {
+	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.DBTable, configs.Database.TTL)
+	fetchService := service.NewFetchService(dbRepo)
+
+	return handler.NewFetchFavoritesHandler(fetchService)
 }

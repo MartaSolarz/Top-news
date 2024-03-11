@@ -7,7 +7,18 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-<h1><img src="https://yt3.googleusercontent.com/y_esGAQOhX4rTpWvrALErAJlFbm_2TIVrvcVfcZny7TuA8dJZgOQcC6KRfd_J5hljFe-foYXj9U=s900-c-k-c0x00ffffff-no-rj" class="header-logo" alt="Logo">Recent Articles</h1>
+<button class="menu-icon" onclick="openNav()">☰</button>
+<div id="menuToggle">
+    <div id="sideMenu" class="side-nav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="/news">Home</a>
+        <a href="/favorites">Favorites</a>
+        <a href="/contact">Contact</a>
+    </div>
+</div>
+<div id="main-content">
+<h1><img src="../images/BBC-logo.jpeg" class="header-logo" alt="Logo">Recent Articles</h1>
+
 <div class="search-container">
     <label for="searchInput"></label><input type="text" id="searchInput" onkeyup="searchArticles()" placeholder="Search for articles...">
     <label for="dateInput"></label><input type="date" id="dateInput" onchange="searchArticles()" placeholder="Filter by date...">
@@ -35,7 +46,8 @@
     </div>
 </div>
 {{end}}
-<script src="../js/script.js"></script>
+</div>
+<script src="../js/news.js"></script>
 <footer>
     Copyright: (C) British Broadcasting Corporation, see
     <a href="https://www.bbc.co.uk/usingthebbc/terms-of-use/#15metadataandrssfeeds" target="_blank">

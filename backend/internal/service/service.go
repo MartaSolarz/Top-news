@@ -7,4 +7,5 @@ type NewsDatabase interface {
 	GetTitles() ([]string, error)
 	PutNews(articles []*models.Article) error
 	GetTTL() int
+	GetFavorites(ids [][]byte) ([]*models.Article, error)
 }
