@@ -133,7 +133,6 @@ func (dbOps *DBOperations) GetTTL() int {
 }
 
 func (dbOps *DBOperations) GetFavorites(ids [][]byte) ([]*models.Article, error) {
-	// Przekształcanie identyfikatorów na stringi i tworzenie placeholderów
 	var placeholders []string
 	var args []interface{}
 	for _, id := range ids {
@@ -185,4 +184,26 @@ func (dbOps *DBOperations) GetFavorites(ids [][]byte) ([]*models.Article, error)
 		articles = append(articles, record)
 	}
 	return articles, nil
+}
+
+func (dbOps *DBOperations) SaveEmail(email string) error {
+	query := fmt.Sprintf("INSERT INTO %s (email, created_at) VALUES (?, NOW())", dbOps.tableName)
+	stmt, err := dbOps.mysqlConn.Client.Prepare(query)
+	if err != nil {
+		return fmt.Errorf("could not prepare statement: %w", err)
+	}
+	defer func() {
+		err = stmt.Close()
+		if err != nil {
+			log.Printf("could not close statement: %s", err.Error())
+			return
+		}
+	}()
+
+	_, err = stmt.Exec(email)
+	if err != nil {
+		return fmt.Errorf("could not execute query: %w", err)
+	}
+
+	return nil
 }

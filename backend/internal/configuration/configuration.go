@@ -14,13 +14,14 @@ type Configuration struct {
 		Port int    `toml:"ServerPort"`
 	} `toml:"server"`
 	Database struct {
-		Host     string `toml:"DBHost"`
-		Port     int    `toml:"DBPort"`
-		User     string `toml:"DBUser"`
-		Password string
-		DBName   string `toml:"DBName"`
-		DBTable  string `toml:"NewsTableName"`
-		TTL      int    `toml:"TTL"`
+		Host       string `toml:"DBHost"`
+		Port       int    `toml:"DBPort"`
+		User       string `toml:"DBUser"`
+		Password   string
+		DBName     string `toml:"DBName"`
+		NewsTable  string `toml:"NewsTableName"`
+		EmailTable string `toml:"EmailTableName"`
+		TTL        int    `toml:"TTL"`
 	} `toml:"database"`
 	News struct {
 		BBCNewsRSSURL string        `toml:"BBCNewsRSSURL"`

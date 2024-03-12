@@ -20,9 +20,9 @@ func NewDisplayNewsHandler(newsService *service.DisplayNewsService) *DisplayNews
 }
 
 func (h *DisplayNewsHandler) DisplayNewsHandler(ctx *fasthttp.RequestCtx) {
-	log.Printf("[GET] /news")
+	log.Printf("[GET] /")
 
-	tmpl, err := template.ParseFiles("frontend/html/news.html")
+	tmpl, err := template.ParseFiles("frontend/html/index.html")
 	if err != nil {
 		log.Println("Error parsing template:", err)
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
