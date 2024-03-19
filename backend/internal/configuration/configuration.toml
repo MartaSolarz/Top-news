@@ -8,6 +8,7 @@ DBPort = 3306
 DBUser = "root"
 DBName = "news"
 NewsTableName = "articles"
+EmailTableName = "emails"
 TTL = 3 # in months
 
 [news]

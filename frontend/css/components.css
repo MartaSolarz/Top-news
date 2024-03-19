@@ -1,0 +1,232 @@
+/* Menu Icon */
+.menu-icon {
+    padding: 25px 8px;
+    cursor: pointer;
+    font-size: 20px;
+    display: compact;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #b70101;
+    color: #ffffff;
+    border: #f9f9f9;
+    margin-left: 10px;
+}
+
+/* Side Navigation */
+.side-nav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #f4f4f4;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 50px;
+    border-right: 7px solid #b70101;
+}
+
+.side-nav a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #333;
+    display: block;
+    transition: 0.3s;
+    margin-left: 10px;
+}
+
+.side-nav a:hover {
+    color: #888888;
+}
+
+.side-nav .close-btn {
+    position: absolute;
+    top: 0;
+    right: 2px;
+    font-size: 36px;
+    margin-left: 50px;
+    cursor: pointer;
+}
+
+/* Articles */
+.article {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+}
+
+.article-content {
+    flex-grow: 1;
+}
+
+.title {
+    color: #333;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.date, .description, .summary, .source, .copyright {
+    margin-top: 10px;
+    color: #666;
+}
+
+.summary-content {
+    display: none;
+    margin-top: 10px;
+    color: #444;
+}
+
+.thumbnail
+{
+    display: block;
+    justify-content: right;
+}
+
+.copyright
+{
+    font-size: small;
+}
+
+/* Buttons */
+.like-btn {
+    cursor: pointer;
+    margin-top: 10px;
+    background-color: #ffffff;
+    color: #565656;
+    border: 1px solid #ddd;
+    padding: 2px 6px;
+    border-radius: 1px;
+    font-size: 12px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    justify-content: center;
+    display: inline-block;
+}
+
+.remove-btn {
+    cursor: pointer;
+    margin-top: 10px;
+    background-color: #b70101;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 12px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    justify-content: center;
+    display: inline-block;
+}
+
+.theme-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    cursor: pointer;
+    position: sticky;
+}
+
+#dateInput {
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #565656;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#resetDateFilter {
+    cursor: pointer;
+    background-color: #b70101;
+    color: #ffffff;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.liked {
+    background-color: #d20202;
+    color: #ffffff;
+}
+
+/* Input Fields */
+#searchInput, #dateInput {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+}
+
+#searchInput {
+    width: 50%;
+}
+
+/* Search Container */
+.search-container {
+    display: flex;
+    justify-content: start;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Show More Button */
+.show-more {
+    color: #007bff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Theme Toggle */
+#theme-toggle {
+    display: flex;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+/* Form */
+.newsletter-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+}
+.form-group input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.form-group button[type="submit"] {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.form-group button[type="submit"]:hover {
+    background-color: #0056b3;
+}

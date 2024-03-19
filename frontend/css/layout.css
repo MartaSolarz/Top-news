@@ -1,0 +1,15 @@
+#main-content {
+    transition: margin-left 0.5s;
+    padding: 5px;
+    overflow-x: hidden;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: #f4f4f4;
+    color: #333;
+}

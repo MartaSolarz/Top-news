@@ -3,37 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Favorites</title>
+    <title>Subscribe to Our Newsletter</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/theme.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-<button class="menu-icon" onclick="openNav()">☰</button>
+<button class="menu-icon">☰</button>
 <div id="menuToggle">
     <div id="sideMenu" class="side-nav">
-        <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">&times;</a>
+        <a href="javascript:void(0)" class="close-btn">&times;</a>
         <a href="/">Home</a>
         <a href="/favorites">Favorites</a>
         <a href="/subscription">Subscribe</a>
     </div>
 </div>
 <div id="main-content">
-<h1>Articles you liked</h1>
-<div id="theme-toggle">
-    <div id="sun" class="theme-icon selected" onclick="toggleTheme('light')">🌞</div>
-    <div id="moon" class="theme-icon" onclick="toggleTheme('dark')">🌜</div>
+    <div id="theme-toggle">
+        <div id="sun" class="theme-icon selected" onclick="toggleTheme('light')">🌞</div>
+        <div id="moon" class="theme-icon" onclick="toggleTheme('dark')">🌜</div>
+    </div>
+<div class="newsletter-form">
+    <h2>Subscribe to Our Newsletter</h2>
+    <form id="subscriptionForm">
+        <div class="form-group">
+            <label for="email">Email address:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+            <button type="submit">Subscribe</button>
+        </div>
+    </form>
 </div>
-<div id="favorites-container">
 </div>
-</div>
+<script type="module" src="../js/subscription.js"></script>
 <footer>
     Copyright: (C) British Broadcasting Corporation, see
     <a href="https://www.bbc.co.uk/usingthebbc/terms-of-use/#15metadataandrssfeeds" target="_blank">
         terms and conditions of reuse</a>.
 </footer>
-<script type="module" src="../js/favorites.js"></script>
 </body>
 </html>

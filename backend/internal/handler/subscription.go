@@ -1,16 +1,22 @@
 package handler
 
 import (
+	"github.com/valyala/fasthttp"
 	"html/template"
 	"log"
-
-	"github.com/valyala/fasthttp"
 )
 
-func (h *DisplayNewsHandler) FavoritesHandler(ctx *fasthttp.RequestCtx) {
-	log.Printf("[GET] /favorites")
+type SubscriptionHandler struct {
+}
 
-	tmpl, err := template.ParseFiles("frontend/html/favorites.html")
+func NewSubscriptionHandler() *SubscriptionHandler {
+	return &SubscriptionHandler{}
+}
+
+func (h *SubscriptionHandler) SubscriptionHandler(ctx *fasthttp.RequestCtx) {
+	log.Printf("[GET] /subscription")
+
+	tmpl, err := template.ParseFiles("frontend/html/subscription.html")
 	if err != nil {
 		log.Println("Error parsing template:", err)
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
