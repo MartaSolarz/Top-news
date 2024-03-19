@@ -86,8 +86,7 @@ function displayArticles(articles) {
 
 function removeFavorite(articleId, element) {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    const articleIdInt = parseInt(articleId, 10);
-    const index = favorites.indexOf(articleIdInt);
+    const index = favorites.indexOf(articleId);
     if (index > -1) {
         favorites.splice(index, 1);
         localStorage.setItem('favorites', JSON.stringify(favorites));
