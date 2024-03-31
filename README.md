@@ -35,7 +35,8 @@ In this project, we have three main apps:
 - Visit the Favorites page to view all articles you've marked as favorites or remove it from your favorites.
 - Go to the Subscription page to subscribe with your email for updates.
 
-
 ## License
 
 This project is licensed under the Apache License - see the LICENSE.md file for details.
+
+**Author: Marta Solarz**
