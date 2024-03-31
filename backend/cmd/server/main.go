@@ -36,7 +36,7 @@ func main() {
 	displayNewsHandler := createDisplayHandler(dbConn, configs)
 	processNewsHandler := createProcessHandler(dbConn, configs)
 	fetchFavoritesHandler := createFetchFavoritesHandler(dbConn, configs)
-	subscribeHandler := createSubscribeHandler(configs)
+	subscribeHandler := createSubscribeHandler()
 	emailHandler := createEmailHandler(dbConn, configs)
 
 	r := router.New()
@@ -86,12 +86,12 @@ func createDisplayHandler(dbConn *adapter.DBConnection, configs *configuration.C
 
 func createProcessHandler(dbConn *adapter.DBConnection, configs *configuration.Configuration) *handler.ProcessNewsHandler {
 	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.NewsTable, configs.Database.EmailTable, configs.Server.MainPath, configs.Database.TTL)
-	newsService := service.NewProcessNewsService(dbRepo, configs.Workers.NumWorkers)
+	newsService := service.NewProcessNewsService(dbRepo, configs.Workers.NumWorkers, configs.OpenAPI.Url, configs.OpenAPI.Key, configs.OpenAPI.Disable)
 
 	return handler.NewProcessNewsHandler(newsService, configs.Workers.NumWorkers)
 }
 
-func createSubscribeHandler(configs *configuration.Configuration) *handler.SubscriptionHandler {
+func createSubscribeHandler() *handler.SubscriptionHandler {
 	return handler.NewSubscriptionHandler()
 }
 

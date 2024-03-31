@@ -15,7 +15,7 @@ func ParseDate(date string) string {
 }
 
 func ExtractContent(url string) string {
-	cmd := exec.Command("venv/bin/python", "python_scripts/extract.py", url)
+	cmd := exec.Command("venv/bin/python", "backend/python/extract.py", url)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Printf("Failed to extract content: %v", err)

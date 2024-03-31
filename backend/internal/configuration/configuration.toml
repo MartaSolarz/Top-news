@@ -24,3 +24,6 @@ ChanSize = 100
 [email]
 HostEmail = "marta.solarz@onet.eu"
 EmailTopic = "Today's news"
+
+[openAPI]
+APIUrl = "https://api.openai.com/v1/completions"

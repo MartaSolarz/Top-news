@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"os"
+	"strconv"
 	"sync"
 	"time"
 
@@ -35,8 +36,13 @@ type Configuration struct {
 	} `toml:"workers"`
 	Email struct {
 		HostEmail  string `toml:"HostEmail"`
-		HostPass   string `toml:"HostPass"`
+		HostPass   string
 		EmailTopic string `toml:"EmailTopic"`
+	}
+	OpenAPI struct {
+		Url     string `toml:"APIUrl"`
+		Key     string
+		Disable bool
 	}
 }
 
@@ -53,5 +59,13 @@ func NewConfiguration(configPath string) *Configuration {
 	conf.Database.Password = os.Getenv("DB_PASSWORD")
 	conf.News.FetchInterval = conf.News.FetchInterval * time.Minute
 	conf.Email.HostPass = os.Getenv("EMAIL_PASSWORD")
+	conf.OpenAPI.Key = os.Getenv("OPEN_API_KEY")
+
+	disable, err := strconv.ParseBool(os.Getenv("DISABLE_OPEN_API"))
+	if err != nil {
+		disable = true
+	}
+	conf.OpenAPI.Disable = disable
+
 	return conf
 }

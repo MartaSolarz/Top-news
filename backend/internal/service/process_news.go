@@ -5,21 +5,26 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
-	"strings"
 	"sync"
 	"top-news/backend/internal/models"
 	"top-news/backend/internal/parser"
 )
 
 type ProcessNewsService struct {
-	newsDB     NewsDatabase
-	NumWorkers int
+	newsDB         NewsDatabase
+	NumWorkers     int
+	openAPIKey     string
+	openAPIUrl     string
+	disableOpenAPI bool
 }
 
-func NewProcessNewsService(newsDB NewsDatabase, workers int) *ProcessNewsService {
+func NewProcessNewsService(newsDB NewsDatabase, workers int, url, key string, disableOpenAPI bool) *ProcessNewsService {
 	return &ProcessNewsService{
-		newsDB:     newsDB,
-		NumWorkers: workers,
+		newsDB:         newsDB,
+		NumWorkers:     workers,
+		openAPIKey:     key,
+		openAPIUrl:     url,
+		disableOpenAPI: disableOpenAPI,
 	}
 }
 
@@ -128,7 +133,7 @@ func (s *ProcessNewsService) summarizeArticles(articlesWithContentChan, doneChan
 		wg.Add(1)
 		go func() {
 			for article := range articlesWithContentChan {
-				doSummarize(article)
+				s.doSummarize(article)
 				doneChan <- article
 			}
 			wg.Done()
@@ -137,9 +142,14 @@ func (s *ProcessNewsService) summarizeArticles(articlesWithContentChan, doneChan
 	wg.Wait()
 }
 
-func doSummarize(article *models.Article) {
-	cmd := exec.Command("venv/bin/python", "python_scripts/ai/summarize.py")
-	cmd.Stdin = strings.NewReader(article.Content)
+func (s *ProcessNewsService) doSummarize(article *models.Article) {
+	if s.disableOpenAPI {
+		article.Summary = article.Content
+		return
+	}
+
+	cmd := exec.Command("venv/bin/python", "backend/python/ai/main.py",
+		article.Content, s.openAPIUrl, s.openAPIKey)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Printf("Failed to summarize article: %v", err)
