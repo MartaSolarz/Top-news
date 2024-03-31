@@ -9,4 +9,6 @@ type NewsDatabase interface {
 	GetTTL() int
 	GetFavorites(ids [][]byte) ([]*models.Article, error)
 	SaveEmail(email string) error
+	GetEmails() ([]string, error)
+	GetNewsFromToday() ([]*models.Article, error)
 }

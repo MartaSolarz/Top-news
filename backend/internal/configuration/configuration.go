@@ -10,8 +10,9 @@ import (
 
 type Configuration struct {
 	Server struct {
-		Host string `toml:"ServerHost"`
-		Port int    `toml:"ServerPort"`
+		Host     string `toml:"ServerHost"`
+		Port     int    `toml:"ServerPort"`
+		MainPath string `toml:"MainPath"`
 	} `toml:"server"`
 	Database struct {
 		Host       string `toml:"DBHost"`
@@ -32,6 +33,11 @@ type Configuration struct {
 		NumWorkers int `toml:"NumWorkers"`
 		ChanSize   int `toml:"ChanSize"`
 	} `toml:"workers"`
+	Email struct {
+		HostEmail  string `toml:"HostEmail"`
+		HostPass   string `toml:"HostPass"`
+		EmailTopic string `toml:"EmailTopic"`
+	}
 }
 
 var conf *Configuration
@@ -46,5 +52,6 @@ func NewConfiguration(configPath string) *Configuration {
 	})
 	conf.Database.Password = os.Getenv("DB_PASSWORD")
 	conf.News.FetchInterval = conf.News.FetchInterval * time.Minute
+	conf.Email.HostPass = os.Getenv("EMAIL_PASSWORD")
 	return conf
 }

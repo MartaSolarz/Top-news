@@ -37,7 +37,7 @@ func main() {
 	processNewsHandler := createProcessHandler(dbConn, configs)
 	fetchFavoritesHandler := createFetchFavoritesHandler(dbConn, configs)
 	subscribeHandler := createSubscribeHandler(configs)
-	saveEmailHandler := createSaveEmailHandler(dbConn, configs)
+	emailHandler := createEmailHandler(dbConn, configs)
 
 	r := router.New()
 	r.GET("/", displayNewsHandler.DisplayNewsHandler)
@@ -45,7 +45,8 @@ func main() {
 	r.GET("/favorites", displayNewsHandler.FavoritesHandler)
 	r.POST("/api/favorites", fetchFavoritesHandler.FetchFavoritesHandler)
 	r.GET("/subscription", subscribeHandler.SubscriptionHandler)
-	r.POST("/api/save_email", saveEmailHandler.SaveEmailHandler)
+	r.POST("/api/save_email", emailHandler.SaveEmailHandler)
+	r.POST("/api/mailing", emailHandler.MailingHandler)
 
 	fs := &fasthttp.FS{
 		Root:               "frontend",
@@ -58,7 +59,8 @@ func main() {
 	requestHandler := func(ctx *fasthttp.RequestCtx) {
 		path := string(ctx.Path())
 		switch {
-		case path == "/", path == "/favorites", path == "/api/process", path == "/subscription", path == "/api/favorites", path == "/api/save_email":
+		case path == "/", path == "/favorites", path == "/api/process", path == "/subscription",
+			path == "/api/favorites", path == "/api/save_email", path == "/api/mailing":
 			r.Handler(ctx)
 		default:
 			fsHandler(ctx)
@@ -76,14 +78,14 @@ func main() {
 }
 
 func createDisplayHandler(dbConn *adapter.DBConnection, configs *configuration.Configuration) *handler.DisplayNewsHandler {
-	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.NewsTable, configs.Database.TTL)
+	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.NewsTable, configs.Database.EmailTable, configs.Server.MainPath, configs.Database.TTL)
 	newsService := service.NewDisplayNewsService(dbRepo)
 
 	return handler.NewDisplayNewsHandler(newsService)
 }
 
 func createProcessHandler(dbConn *adapter.DBConnection, configs *configuration.Configuration) *handler.ProcessNewsHandler {
-	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.NewsTable, configs.Database.TTL)
+	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.NewsTable, configs.Database.EmailTable, configs.Server.MainPath, configs.Database.TTL)
 	newsService := service.NewProcessNewsService(dbRepo, configs.Workers.NumWorkers)
 
 	return handler.NewProcessNewsHandler(newsService, configs.Workers.NumWorkers)
@@ -94,14 +96,14 @@ func createSubscribeHandler(configs *configuration.Configuration) *handler.Subsc
 }
 
 func createFetchFavoritesHandler(dbConn *adapter.DBConnection, configs *configuration.Configuration) *handler.FetchFavoritesHandler {
-	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.NewsTable, configs.Database.TTL)
+	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.NewsTable, configs.Database.EmailTable, configs.Server.MainPath, configs.Database.TTL)
 	fetchService := service.NewFetchService(dbRepo)
 
 	return handler.NewFetchFavoritesHandler(fetchService)
 }
 
-func createSaveEmailHandler(dbConn *adapter.DBConnection, configs *configuration.Configuration) *handler.SaveEmailHandler {
-	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.EmailTable, -1)
-	saveEmailService := service.NewSaveEmailService(dbRepo)
-	return handler.NewSaveEmailHandler(saveEmailService)
+func createEmailHandler(dbConn *adapter.DBConnection, configs *configuration.Configuration) *handler.EmailHandler {
+	dbRepo := newsDB.NewDBOperations(dbConn, configs.Database.NewsTable, configs.Database.EmailTable, configs.Server.MainPath, -1)
+	saveEmailService := service.NewSaveEmailService(dbRepo, configs.Email.HostEmail, configs.Email.HostPass, configs.Email.EmailTopic)
+	return handler.NewEmailHandler(saveEmailService)
 }

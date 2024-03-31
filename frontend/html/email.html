@@ -1,0 +1,29 @@
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .article { margin-bottom: 20px; }
+        .article-title { font-weight: bold; }
+        .article-description { margin-top: 5px; }
+        .article-published { margin-top: 5px; }
+        .footer { margin-top: 20px; }
+    </style>
+</head>
+<body>
+<p>Hi!</p>
+<p>Here are today's top news:</p>
+{{range $index, $element := .}}
+<div class="article">
+    <div class="article-title">{{$index | addOne}}. {{.Title}}</div>
+    <div class="article-description">Description: {{.Description}}</div>
+    <div class="article-published">Published: {{.PublishDate}}</div>
+    <a href="{{.MyDomain}}">Read more</a>
+    <a href="{{.SourceURL}}">Read full article</a>
+</div>
+{{end}}
+<div class="footer">
+    <p>Thank you for subscribing to our newsletter!</p>
+    <p>Best regards,<br>Top News Team</p>
+</div>
+</body>
+</html>

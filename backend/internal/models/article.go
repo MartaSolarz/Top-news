@@ -21,6 +21,7 @@ type Article struct {
 	Authors     string
 	Thumbnail   Thumbnail
 	ExpireAt    time.Time
+	MyDomain    string
 }
 
 func ConvertFeedToArticle(feed *FeedItem, ttl int) *Article {

@@ -10,17 +10,17 @@ import (
 	"top-news/backend/internal/service"
 )
 
-type SaveEmailHandler struct {
-	SaveEmailService *service.SaveEmailService
+type EmailHandler struct {
+	EmailService *service.EmailService
 }
 
-func NewSaveEmailHandler(saveEmailService *service.SaveEmailService) *SaveEmailHandler {
-	return &SaveEmailHandler{
-		SaveEmailService: saveEmailService,
+func NewEmailHandler(EmailService *service.EmailService) *EmailHandler {
+	return &EmailHandler{
+		EmailService: EmailService,
 	}
 }
 
-func (h *SaveEmailHandler) SaveEmailHandler(ctx *fasthttp.RequestCtx) {
+func (h *EmailHandler) SaveEmailHandler(ctx *fasthttp.RequestCtx) {
 	log.Printf("[POST] /api/save_email")
 
 	var requestBody struct {
@@ -39,7 +39,7 @@ func (h *SaveEmailHandler) SaveEmailHandler(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	err := h.SaveEmailService.SaveEmail(email)
+	err := h.EmailService.SaveEmail(email)
 	if err != nil {
 		switch {
 		case errors.Is(err, service.ErrInvalidEmail):
@@ -58,5 +58,20 @@ func (h *SaveEmailHandler) SaveEmailHandler(ctx *fasthttp.RequestCtx) {
 	log.Println("Email saved successfully!")
 
 	ctx.SetStatusCode(fasthttp.StatusOK)
+}
 
+func (h *EmailHandler) MailingHandler(ctx *fasthttp.RequestCtx) {
+	log.Printf("[POST] /api/mailing")
+
+	err := h.EmailService.SendEmails()
+	if err != nil {
+		log.Println("Error sending emails:", err)
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		ctx.SetBodyString("Internal Server Error")
+		return
+	}
+
+	log.Println("Emails sent successfully!")
+
+	ctx.SetStatusCode(fasthttp.StatusOK)
 }
