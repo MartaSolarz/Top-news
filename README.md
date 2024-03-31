@@ -17,7 +17,7 @@ For storing data, the application uses a MySQL database.
 In this project, we have three main apps:
 - **server/main.go**: The main server application that serves the whole website.
 - **rssfetcher/main.go**: A service that fetches articles from the BBC RSS feed.
-- **mailing/main.py**: A service that sends emails to subscribers with the latest articles.
+- **mailing/main.go**: A service that sends emails to subscribers with the latest articles.
 
 ## Features
 
