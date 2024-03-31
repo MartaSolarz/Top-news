@@ -3,6 +3,8 @@
 
 ![Image](https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/BBC_News_logo.svg/2560px-BBC_News_logo.svg.png)
 
+[Source](https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/BBC_News_logo.svg/2560px-BBC_News_logo.svg.png)
+
 ## Overview
 
 This application is a comprehensive solution for browsing, filtering, and managing articles from BBC. It features a home page displaying articles, with capabilities for filtering and searching, marking articles as favorites, and a subscription page for receiving email updates. The application is powered by a combination of frontend technologies (HTML, CSS, JavaScript) and backend services (Go, Python), utilizing artificial intelligence for generating article summaries.
