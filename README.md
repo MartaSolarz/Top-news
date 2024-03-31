@@ -35,6 +35,13 @@ In this project, we have three main apps:
 - Visit the Favorites page to view all articles you've marked as favorites or remove it from your favorites.
 - Go to the Subscription page to subscribe with your email for updates.
 
+## Presentation of the application
+
+In the gif below, you can see the application in action:
+
+![Gif](portfolio.gif)
+
+
 ## License
 
 This project is licensed under the Apache License - see the LICENSE.md file for details.
